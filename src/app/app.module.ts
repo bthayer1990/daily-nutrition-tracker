@@ -9,10 +9,14 @@ import { provideAnalytics,getAnalytics,ScreenTrackingService,UserTrackingService
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { providePerformance,getPerformance } from '@angular/fire/performance';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { GoalsComponent } from './goals/goals.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DashboardComponent,
+    GoalsComponent
   ],
   imports: [
     BrowserModule,

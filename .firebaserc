@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "daily-nutrition-tracker": {
+      "hosting": {
+        "daily-nutrition-tracker": [
+          "daily-nutrition-tracker"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "daily-nutrition-tracker"
+  }
+}

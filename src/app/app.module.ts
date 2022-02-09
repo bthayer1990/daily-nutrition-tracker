@@ -10,13 +10,13 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { providePerformance,getPerformance } from '@angular/fire/performance';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { GoalsComponent } from './goals/goals.component';
+import { GoalConfigurationComponent } from './goal-configuration/goal-configuration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    GoalsComponent
+    GoalConfigurationComponent
   ],
   imports: [
     BrowserModule,

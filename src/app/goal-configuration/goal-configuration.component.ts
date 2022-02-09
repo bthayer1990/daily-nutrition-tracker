@@ -24,11 +24,11 @@ export class GoalConfigurationComponent implements OnInit {
         this.user = userCred.user;
       }
 
-      this.getGoalsForUser();
+      this.getUserGoals();
     });
   }
 
-  async getGoalsForUser(): Promise<void> {
+  async getUserGoals(): Promise<void> {
 
   }
 

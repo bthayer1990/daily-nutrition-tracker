@@ -4,6 +4,7 @@ export enum NutritionType {
 }
 
 export class Goal {
+  id: string = "";
   userEmail: string = "";
   nutritionType: NutritionType = NutritionType.Calories;
   minValue: number = 0;
@@ -11,6 +12,7 @@ export class Goal {
 }
 
 export class DailyEntry {
+  id: string = "";
   date: Date = new Date();
   currentValue: number = 0;
 }

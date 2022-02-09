@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, QueryFn } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
 import { Observable, switchMap, take } from 'rxjs';
-import { Goal, NutritionType } from './goal.model';
+import { Goal, GoalType, NutritionType } from './goal.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +29,8 @@ export class GoalsService {
   }
 
   async makeDefaultGoals(user: firebase.User): Promise<Goal[]> {
-    const calorieDocRef = await this.store.collection<Goal>(this.GOALS_COLLECTION_NAME).add(JSON.parse(JSON.stringify(new Goal(user.email!, NutritionType.Calories))));
-    const proteinDocRef = await this.store.collection<Goal>(this.GOALS_COLLECTION_NAME).add(JSON.parse(JSON.stringify(new Goal(user.email!, NutritionType.Protein))));
+    const calorieDocRef = await this.store.collection<Goal>(this.GOALS_COLLECTION_NAME).add(JSON.parse(JSON.stringify(new Goal(user.email!, NutritionType.Calories, GoalType.MaxAllowed))));
+    const proteinDocRef = await this.store.collection<Goal>(this.GOALS_COLLECTION_NAME).add(JSON.parse(JSON.stringify(new Goal(user.email!, NutritionType.Protein, GoalType.MinRequired))));
     const calorieDoc = await calorieDocRef.get();
     const proteinDoc = await proteinDocRef.get();
 

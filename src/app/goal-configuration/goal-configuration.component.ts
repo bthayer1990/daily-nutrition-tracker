@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
 import { take } from 'rxjs';
-import { Goal } from '../shared/goal.model';
+import { Goal, GoalType } from '../shared/goal.model';
 import { GoalsService } from '../shared/goals.service';
 
 @Component({
@@ -33,8 +33,19 @@ export class GoalConfigurationComponent implements OnInit {
 
   async setUserGoals(): Promise<void> {
     this.goalsSvc.getUserGoals(this.user!).subscribe((goals: Goal[]) => {
-      this.userGoals = goals.sort();
+      this.userGoals = goals.sort((a, b) => (a.nutritionType > b.nutritionType) ? 1 : -1);
     });
   }
 
+  updateGoals(): void {
+
+  }
+
+  getHelpText(goal: Goal): string {
+    if (goal.type === GoalType.MaxAllowed) {
+      return "Max number allowed";
+    }
+
+    return "Min number required";
+  }
 }

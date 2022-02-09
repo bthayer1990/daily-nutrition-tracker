@@ -1,1 +1,15 @@
-<p *ngFor="let goal of userGoals">{{goal.nutritionType}}</p>
+<h1 class="title">Set Your Goals</h1>
+
+<div *ngFor="let goal of userGoals" class="field mb-5">
+  <label class="label">{{goal.nutritionType}}</label>
+  <div class="control">
+    <input class="input" type="number" [(ngModel)]="goal.value">
+  </div>
+  <p class="help">{{getHelpText(goal)}}</p>
+</div>
+
+<div class="field">
+  <div class="control">
+    <button class="button is-link" (click)="updateGoals()">Submit</button>
+  </div>
+</div>

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, QueryFn } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
-import { map, Observable, take } from 'rxjs';
-import { Goal } from './goal.model';
+import { Observable, switchMap, take } from 'rxjs';
+import { Goal, NutritionType } from './goal.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,22 @@ export class GoalsService {
 
     return this.store.collection<Goal>(this.GOALS_COLLECTION_NAME, queryFn).valueChanges().pipe(
       take(1),
-
+      switchMap(async (goals: Goal[]) => {
+        if (goals && goals.length) {
+          return goals;
+        } else {
+          return await this.makeDefaultGoals(user);
+        }
+      })
     );
+  }
+
+  async makeDefaultGoals(user: firebase.User): Promise<Goal[]> {
+    const calorieDocRef = await this.store.collection<Goal>(this.GOALS_COLLECTION_NAME).add(JSON.parse(JSON.stringify(new Goal(user.email!, NutritionType.Calories))));
+    const proteinDocRef = await this.store.collection<Goal>(this.GOALS_COLLECTION_NAME).add(JSON.parse(JSON.stringify(new Goal(user.email!, NutritionType.Protein))));
+    const calorieDoc = await calorieDocRef.get();
+    const proteinDoc = await proteinDocRef.get();
+
+    return [calorieDoc.data()!, proteinDoc.data()!];
   }
 }

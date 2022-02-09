@@ -1,18 +1,21 @@
 export enum NutritionType {
-  Calories,
-  Protein
+  Calories = "Calories",
+  Protein = "Protein"
 }
 
 export class Goal {
-  id: string = "";
   userEmail: string = "";
   nutritionType: NutritionType = NutritionType.Calories;
   minValue: number = 0;
   maxValue: number = 0;
+
+  constructor(userEmail: string, nutritionType: NutritionType) {
+    this.userEmail = userEmail;
+    this.nutritionType = nutritionType;
+  }
 }
 
 export class DailyEntry {
-  id: string = "";
   date: Date = new Date();
   currentValue: number = 0;
 }

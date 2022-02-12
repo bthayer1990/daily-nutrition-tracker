@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, QueryFn } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
-import { Observable, switchMap, take } from 'rxjs';
-import { Goal, AmountSetting, NutritionType } from './goal.model';
+import { map, Observable, switchMap, take } from 'rxjs';
+import { Goal, AmountSetting, NutritionType, DailyRecord } from './goal.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoalsService {
   private readonly GOALS_COLLECTION_NAME: string = "goals";
-  private readonly DAILY_RECORDS_COLLECTION_NAME: string = "dailyRecords";
 
   constructor(private store: AngularFirestore) { }
 
@@ -40,5 +39,9 @@ export class GoalsService {
 
   updateGoalTarget(goal: Goal): Promise<void> {
     return this.store.collection(this.GOALS_COLLECTION_NAME).doc(goal.id).set({ targetAmount: goal.targetAmount}, { merge: true });
+  }
+
+  updateGoalDailyRecords(goal: Goal): Promise<void> {
+    return this.store.collection(this.GOALS_COLLECTION_NAME).doc(goal.id).set({ dailyRecords: JSON.parse(JSON.stringify(goal.dailyRecords))}, { merge: true });
   }
 }

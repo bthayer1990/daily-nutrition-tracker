@@ -14,6 +14,7 @@ export class Goal {
   nutritionType: NutritionType = NutritionType.Calories;
   amountSetting: AmountSetting = AmountSetting.MaxAllowed;
   targetAmount: number = 0;
+  dailyRecords: DailyRecord[] = [];
 
   constructor(id: string, userEmail: string, nutritionType: NutritionType, amountSetting: AmountSetting) {
     this.id = id,
@@ -26,4 +27,8 @@ export class Goal {
 export class DailyRecord {
   date: string = "";
   currentAmount: number = 0;
+
+  constructor(date: string) {
+    this.date = date;
+  }
 }

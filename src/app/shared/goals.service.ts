@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, QueryFn } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
 import { Observable, switchMap, take } from 'rxjs';
-import { Goal, GoalType, NutritionType } from './goal.model';
+import { Goal, AmountSetting, NutritionType } from './goal.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoalsService {
   private readonly GOALS_COLLECTION_NAME: string = "goals";
-  private readonly DAILY_ENTRIES_COLLECTION_NAME: string = "dailyEntries";
+  private readonly DAILY_RECORDS_COLLECTION_NAME: string = "dailyRecords";
 
   constructor(private store: AngularFirestore) { }
 
@@ -29,11 +29,16 @@ export class GoalsService {
   }
 
   async makeDefaultGoals(user: firebase.User): Promise<Goal[]> {
-    const calorieDocRef = await this.store.collection<Goal>(this.GOALS_COLLECTION_NAME).add(JSON.parse(JSON.stringify(new Goal(user.email!, NutritionType.Calories, GoalType.MaxAllowed))));
-    const proteinDocRef = await this.store.collection<Goal>(this.GOALS_COLLECTION_NAME).add(JSON.parse(JSON.stringify(new Goal(user.email!, NutritionType.Protein, GoalType.MinRequired))));
-    const calorieDoc = await calorieDocRef.get();
-    const proteinDoc = await proteinDocRef.get();
+    const calorieGoal = new Goal(this.store.createId(), user.email!, NutritionType.Calories, AmountSetting.MaxAllowed)
+    const proteinGoal = new Goal(this.store.createId(), user.email!, NutritionType.Protein, AmountSetting.MinNeeded)
 
-    return [calorieDoc.data()!, proteinDoc.data()!];
+    await this.store.collection<Goal>(this.GOALS_COLLECTION_NAME).doc(calorieGoal.id).set(JSON.parse(JSON.stringify(calorieGoal)));
+    await this.store.collection<Goal>(this.GOALS_COLLECTION_NAME).doc(proteinGoal.id).set(JSON.parse(JSON.stringify(proteinGoal)));
+
+    return [calorieGoal, proteinGoal];
+  }
+
+  updateGoalTarget(goal: Goal): Promise<void> {
+    return this.store.collection(this.GOALS_COLLECTION_NAME).doc(goal.id).set({ targetAmount: goal.targetAmount}, { merge: true });
   }
 }

@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
 import { take } from 'rxjs';
-import { Goal, GoalType } from '../shared/goal.model';
+import { Goal, AmountSetting } from '../shared/goal.model';
 import { GoalsService } from '../shared/goals.service';
+import { UpdateStatus } from '../shared/update-status.enum';
 
 @Component({
   selector: 'app-goal-configuration',
@@ -13,6 +14,9 @@ import { GoalsService } from '../shared/goals.service';
 export class GoalConfigurationComponent implements OnInit {
   user: firebase.User | null = null;
   userGoals: Goal[] = [];
+  updateStatus: UpdateStatus = UpdateStatus.NONE;
+  UpdateStatus = UpdateStatus;
+  AmountSetting = AmountSetting;
 
   constructor(public auth: AngularFireAuth, private goalsSvc: GoalsService) { }
 
@@ -37,15 +41,18 @@ export class GoalConfigurationComponent implements OnInit {
     });
   }
 
-  updateGoals(): void {
+  async updateGoals(): Promise<void> {
+    try {
+      this.updateStatus = UpdateStatus.LOADING;
 
-  }
+      for (const goal of this.userGoals) {
+        await this.goalsSvc.updateGoalTarget(goal);
+      }
 
-  getHelpText(goal: Goal): string {
-    if (goal.type === GoalType.MaxAllowed) {
-      return "Max number allowed";
+      this.updateStatus = UpdateStatus.SUCCESS;
+    } catch (error) {
+      console.error(error);
+      this.updateStatus = UpdateStatus.ERROR;
     }
-
-    return "Min number required";
   }
 }

@@ -3,13 +3,24 @@
 <div *ngFor="let goal of userGoals" class="field mb-5">
   <label class="label">{{goal.nutritionType}}</label>
   <div class="control">
-    <input class="input" type="number" [(ngModel)]="goal.value">
+    <input class="input" type="number" [(ngModel)]="goal.targetAmount">
   </div>
-  <p class="help">{{getHelpText(goal)}}</p>
+  <p *ngIf="goal.amountSetting === AmountSetting.MaxAllowed" class="help">Max amount allowed</p>
+  <p *ngIf="goal.amountSetting === AmountSetting.MinNeeded" class="help">Min amount needed</p>
 </div>
 
 <div class="field">
   <div class="control">
-    <button class="button is-link" (click)="updateGoals()">Submit</button>
+    <button class="button is-link" (click)="updateGoals()" [disabled]="updateStatus === UpdateStatus.LOADING">Submit</button>
   </div>
+</div>
+
+<div *ngIf="updateStatus === UpdateStatus.SUCCESS" class="notification is-success">
+  <button class="delete" (click)="updateStatus = UpdateStatus.NONE"></button>
+  Your goals have been updated!
+</div>
+
+<div *ngIf="updateStatus === UpdateStatus.ERROR" class="notification is-danger">
+  <button class="delete" (click)="updateStatus = UpdateStatus.NONE"></button>
+  An error occurred while updating your goals.
 </div>

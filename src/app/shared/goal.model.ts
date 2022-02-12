@@ -3,25 +3,27 @@ export enum NutritionType {
   Protein = "Protein"
 }
 
-export enum GoalType {
-  MaxAllowed,
-  MinRequired
+export enum AmountSetting {
+  MaxAllowed = "Max Allowed",
+  MinNeeded = "Min Needed"
 }
 
 export class Goal {
+  id: string = "";
   userEmail: string = "";
   nutritionType: NutritionType = NutritionType.Calories;
-  type: GoalType = GoalType.MaxAllowed;
-  value: number = 0;
+  amountSetting: AmountSetting = AmountSetting.MaxAllowed;
+  targetAmount: number = 0;
 
-  constructor(userEmail: string, nutritionType: NutritionType, type: GoalType) {
+  constructor(id: string, userEmail: string, nutritionType: NutritionType, amountSetting: AmountSetting) {
+    this.id = id,
     this.userEmail = userEmail;
     this.nutritionType = nutritionType;
-    this.type = type;
+    this.amountSetting = amountSetting;
   }
 }
 
-export class DailyEntry {
+export class DailyRecord {
   date: string = "";
-  currentValue: number = 0;
+  currentAmount: number = 0;
 }

@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
 import { take } from 'rxjs';
-import { DateService } from '../shared/date.service';
+import { DateService } from './date.service';
 import { Goal, AmountSetting, DailyRecord } from '../shared/goal.model';
 import { GoalsService } from '../shared/goals.service';
 import { UpdateStatus } from '../shared/update-status.enum';
+import { Operation } from './operation.enum';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +19,7 @@ export class DashboardComponent implements OnInit {
   updateStatus: UpdateStatus = UpdateStatus.NONE;
   UpdateStatus = UpdateStatus;
   AmountSetting = AmountSetting;
+  Operation = Operation;
 
   constructor(public auth: AngularFireAuth, private goalsSvc: GoalsService, private dateSvc: DateService) { }
 
@@ -51,35 +53,35 @@ export class DashboardComponent implements OnInit {
     return recordForToday;
   }
 
-  async addToCurrentAmount(goal: Goal, newAmountField: any) {
+  async modifyCurrentAmount(goal: Goal, newAmountField: any, operation: Operation) {
     try {
-      this.updateStatus = UpdateStatus.LOADING;
+      if (newAmountField.value) {
+        this.updateStatus = UpdateStatus.LOADING;
 
-      const record = this.getRecordForToday(goal);
-      record.currentAmount += parseInt(newAmountField.value);
-      await this.goalsSvc.updateGoalDailyRecords(goal);
+        const record = this.getRecordForToday(goal);
 
-      this.updateStatus = UpdateStatus.SUCCESS;
-      newAmountField.value = "";
+        if (operation === Operation.Add) {
+          record.currentAmount += parseInt(newAmountField.value);
+        } else {
+          record.currentAmount = parseInt(newAmountField.value);
+        }
+
+        await this.goalsSvc.updateGoalDailyRecords(goal);
+
+        this.updateStatus = UpdateStatus.SUCCESS;
+        newAmountField.value = "";
+      }
     } catch(error) {
       console.error(error);
       this.updateStatus = UpdateStatus.ERROR;
     }
   }
 
-  async updateCurrentAmount(goal: Goal, newAmountField: any) {
-    try {
-      this.updateStatus = UpdateStatus.LOADING;
+  neededAmountReached(goal: Goal): boolean {
+    return (goal.amountSetting === AmountSetting.MinNeeded) && (this.getRecordForToday(goal).currentAmount >= goal.targetAmount);
+  }
 
-      const record = this.getRecordForToday(goal);
-      record.currentAmount = parseInt(newAmountField.value);
-      await this.goalsSvc.updateGoalDailyRecords(goal);
-
-      this.updateStatus = UpdateStatus.SUCCESS;
-      newAmountField.value = "";
-    } catch(error) {
-      console.error(error);
-      this.updateStatus = UpdateStatus.ERROR;
-    }
+  allowedAmountExceeded(goal: Goal): boolean {
+    return (goal.amountSetting === AmountSetting.MaxAllowed) && (this.getRecordForToday(goal).currentAmount >= goal.targetAmount);
   }
 }

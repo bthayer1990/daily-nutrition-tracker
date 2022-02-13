@@ -35,19 +35,21 @@ export class DashboardComponent implements OnInit {
   }
 
   async setUserGoals(): Promise<void> {
-    this.goalsSvc.getUserGoals(this.user!).subscribe((goals: Goal[]) => {
+    this.goalsSvc.getUserGoals(this.user!).subscribe(async (goals: Goal[]) => {
+      await this.setDailyRecordForGoals(goals);
       this.userGoals = goals.sort((a, b) => (a.nutritionType > b.nutritionType) ? 1 : -1);
       this.goalsConfigured = goals.every(goal => goal.targetAmount > 0);
     });
   }
 
-  getRecordForToday(goal: Goal): DailyRecord {
-    let recordForToday = goal.dailyRecords.find(record => record.date === this.dateSvc.getFormattedCurrentDate());
-    if (!recordForToday) {
-      recordForToday = new DailyRecord(this.dateSvc.getFormattedCurrentDate());
-      goal.dailyRecords.push(recordForToday);
+  async setDailyRecordForGoals(goals: Goal[]): Promise<void> {
+    for (const goal of goals) {
+      const dailyRecordIsForToday = goal.dailyRecord.date === this.dateSvc.getFormattedCurrentDate();
+      if (!dailyRecordIsForToday) {
+        await this.goalsSvc.addHistoricalRecordForPreviousDay(goal);
+        goal.dailyRecord = new DailyRecord(this.dateSvc.getFormattedCurrentDate());
+      }
     }
-    return recordForToday;
   }
 
   async modifyCurrentAmount(goal: Goal, newAmountField: any, operation: Operation) {
@@ -55,15 +57,13 @@ export class DashboardComponent implements OnInit {
       if (newAmountField.value) {
         this.updateStatus = UpdateStatus.LOADING;
 
-        const record = this.getRecordForToday(goal);
-
         if (operation === Operation.Add) {
-          record.currentAmount += parseInt(newAmountField.value);
+          goal.dailyRecord.currentAmount += parseInt(newAmountField.value);
         } else {
-          record.currentAmount = parseInt(newAmountField.value);
+          goal.dailyRecord.currentAmount = parseInt(newAmountField.value);
         }
 
-        await this.goalsSvc.updateGoalDailyRecords(goal);
+        await this.goalsSvc.updateGoalDailyRecord(goal);
 
         this.updateStatus = UpdateStatus.SUCCESS;
         newAmountField.value = "";
@@ -75,10 +75,10 @@ export class DashboardComponent implements OnInit {
   }
 
   neededAmountReached(goal: Goal): boolean {
-    return (goal.amountSetting === AmountSetting.MinNeeded) && (this.getRecordForToday(goal).currentAmount >= goal.targetAmount);
+    return (goal.amountSetting === AmountSetting.MinNeeded) && (goal.dailyRecord.currentAmount >= goal.targetAmount);
   }
 
   allowedAmountExceeded(goal: Goal): boolean {
-    return (goal.amountSetting === AmountSetting.MaxAllowed) && (this.getRecordForToday(goal).currentAmount >= goal.targetAmount);
+    return (goal.amountSetting === AmountSetting.MaxAllowed) && (goal.dailyRecord.currentAmount >= goal.targetAmount);
   }
 }

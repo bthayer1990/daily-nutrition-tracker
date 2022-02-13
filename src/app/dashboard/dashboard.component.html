@@ -10,11 +10,10 @@
         <div class="field">
           <div class="level is-mobile mb-1">
             <div class="level-left">
-              <!-- <span class="subtitle is-6 mb-0">Target - {{goal.targetAmount}}</span> -->
               <label class="label">{{goal.amountSetting === AmountSetting.MaxAllowed ? 'Allowed' : 'Needed'}}: {{goal.targetAmount}}</label>
             </div>
             <div class="level-right">
-              <label class="label">Current: {{getRecordForToday(goal).currentAmount}}</label>
+              <label class="label">Current: {{goal.dailyRecord.currentAmount}}</label>
             </div>
           </div>
           <div class="control">

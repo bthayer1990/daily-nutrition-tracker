@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, QueryFn } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat/app';
-import { map, Observable, switchMap, take } from 'rxjs';
-import { Goal, AmountSetting, NutritionType, DailyRecord } from './goal.model';
+import { Observable, switchMap, take } from 'rxjs';
+import { Goal, AmountSetting, NutritionType, HistoricalRecord } from './goal.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoalsService {
   private readonly GOALS_COLLECTION_NAME: string = "goals";
+  private readonly HISTORICAL_RECORDS_COLLECTION_NAME: string = "historicalRecords";
 
   constructor(private store: AngularFirestore) { }
 
@@ -41,7 +42,14 @@ export class GoalsService {
     return this.store.collection(this.GOALS_COLLECTION_NAME).doc(goal.id).set({ targetAmount: goal.targetAmount}, { merge: true });
   }
 
-  updateGoalDailyRecords(goal: Goal): Promise<void> {
-    return this.store.collection(this.GOALS_COLLECTION_NAME).doc(goal.id).set({ dailyRecords: JSON.parse(JSON.stringify(goal.dailyRecords))}, { merge: true });
+  updateGoalDailyRecord(goal: Goal): Promise<void> {
+    return this.store.collection(this.GOALS_COLLECTION_NAME).doc(goal.id).set({ dailyRecord: JSON.parse(JSON.stringify(goal.dailyRecord))}, { merge: true });
+  }
+
+  async addHistoricalRecordForPreviousDay(goal: Goal): Promise<void> {
+    if (goal.dailyRecord.date) {
+      const historicalRecord = new HistoricalRecord(this.store.createId(), goal);
+      await this.store.collection<Goal>(this.HISTORICAL_RECORDS_COLLECTION_NAME).doc(historicalRecord.id).set(JSON.parse(JSON.stringify(historicalRecord)));
+    }
   }
 }

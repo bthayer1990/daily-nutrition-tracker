@@ -11,22 +11,22 @@
           <div class="level is-mobile mb-1">
             <div class="level-left">
               <!-- <span class="subtitle is-6 mb-0">Target - {{goal.targetAmount}}</span> -->
-              <label class="label">{{goal.amountSetting === AmountSetting.MaxAllowed ? 'Allowed' : 'Needed'}} - {{goal.targetAmount}}</label>
+              <label class="label">{{goal.amountSetting === AmountSetting.MaxAllowed ? 'Allowed' : 'Needed'}}: {{goal.targetAmount}}</label>
             </div>
             <div class="level-right">
-              <label class="label">Current - {{getRecordForToday(goal).currentAmount}}</label>
+              <label class="label">Current: {{getRecordForToday(goal).currentAmount}}</label>
             </div>
           </div>
           <div class="control">
-            <input #newAmount class="input" type="number">
+            <input #newAmount class="input is-medium" type="number">
           </div>
         </div>
-        <div class="field is-grouped is-grouped-right">
+        <div class="field is-grouped">
           <div class="control">
-            <button class="button is-link" (click)="modifyCurrentAmount(goal, newAmount, Operation.Add)" [disabled]="updateStatus === UpdateStatus.LOADING" [ngClass]="{'is-loading' : updateStatus === UpdateStatus.LOADING}">Add</button>
+            <button class="button is-link is-medium is-light" (click)="modifyCurrentAmount(goal, newAmount, Operation.Update)" [disabled]="updateStatus === UpdateStatus.LOADING" [ngClass]="{'is-loading' : updateStatus === UpdateStatus.LOADING}">Update</button>
           </div>
-          <div class="control">
-            <button class="button is-link is-light" (click)="modifyCurrentAmount(goal, newAmount, Operation.Update)" [disabled]="updateStatus === UpdateStatus.LOADING" [ngClass]="{'is-loading' : updateStatus === UpdateStatus.LOADING}">Update</button>
+          <div class="control add-button-container">
+            <button class="button is-link is-medium" (click)="modifyCurrentAmount(goal, newAmount, Operation.Add)" [disabled]="updateStatus === UpdateStatus.LOADING" [ngClass]="{'is-loading' : updateStatus === UpdateStatus.LOADING}">Add</button>
           </div>
         </div>
       </div>

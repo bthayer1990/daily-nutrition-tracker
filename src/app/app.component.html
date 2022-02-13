@@ -1,16 +1,50 @@
-<nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item" routerLink="/dashboard">
-      <img src="../assets/icon.png" width="45" height="45">
-    </a>
-    <a class="navbar-item" routerLink="/dashboard">
-      Daily Nutrition Tracker
-    </a>
-    <a class="navbar-item" routerLink="/goals">
-      Goals
-    </a>
-  </div>
-</nav>
+<ng-container *ngIf="auth.user | async as user; else unauthenticatedNavbar">
+  <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" routerLink="/dashboard">
+        <img src="../assets/icon.png" width="45" height="45">
+      </a>
+      <a class="navbar-item" routerLink="/dashboard">
+        Daily Nutrition Tracker
+      </a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenuContainer" (click)="mobileMenuActive = !mobileMenuActive" [ngClass]="{'is-active' : mobileMenuActive}">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div id="navbarMenuContainer" class="navbar-menu" [ngClass]="{'is-active' : mobileMenuActive}">
+      <div class="navbar-start">
+        <a class="navbar-item" routerLink="/goals">
+          Goals
+        </a>
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a class="button is-light" href="" (click)="logout()">
+              Log Out
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</ng-container>
+
+<ng-template #unauthenticatedNavbar>
+  <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+        <img src="../assets/icon.png" width="45" height="45">
+      </div>
+      <div class="navbar-item">
+        Daily Nutrition Tracker
+      </div>
+    </div>
+  </nav>
+</ng-template>
+
 <section class="section">
   <router-outlet></router-outlet>
 </section>

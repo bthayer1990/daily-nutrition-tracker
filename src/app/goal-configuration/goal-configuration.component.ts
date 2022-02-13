@@ -25,10 +25,6 @@ export class GoalConfigurationComponent implements OnInit {
     this.auth.user.pipe(
       take(1)
     ).subscribe(async (authUser: firebase.User | null) => {
-      if (!authUser) {
-        this.router.navigateByUrl(`/login`);
-      }
-
       this.user = authUser;
       this.setUserGoals();
     });

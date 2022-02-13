@@ -7,6 +7,7 @@ import { Goal, AmountSetting, DailyRecord } from '../shared/goal.model';
 import { GoalsService } from '../shared/goals.service';
 import { UpdateStatus } from '../shared/update-status.enum';
 import { Operation } from './operation.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,20 +21,19 @@ export class DashboardComponent implements OnInit {
   UpdateStatus = UpdateStatus;
   AmountSetting = AmountSetting;
   Operation = Operation;
+  goalsConfigured: boolean = false;
 
-  constructor(public auth: AngularFireAuth, private goalsSvc: GoalsService, private dateSvc: DateService) { }
+  constructor(public auth: AngularFireAuth, private goalsSvc: GoalsService, private dateSvc: DateService, private router: Router) { }
 
   async ngOnInit(): Promise<void> {
     this.auth.user.pipe(
       take(1)
     ).subscribe(async (authUser: firebase.User | null) => {
-      this.user = authUser;
-
-      if (!this.user) {
-        const userCred = await this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-        this.user = userCred.user;
+      if (!authUser) {
+        this.router.navigateByUrl(`/login`);
       }
 
+      this.user = authUser;
       this.setUserGoals();
     });
   }
@@ -41,6 +41,7 @@ export class DashboardComponent implements OnInit {
   async setUserGoals(): Promise<void> {
     this.goalsSvc.getUserGoals(this.user!).subscribe((goals: Goal[]) => {
       this.userGoals = goals.sort((a, b) => (a.nutritionType > b.nutritionType) ? 1 : -1);
+      this.goalsConfigured = goals.every(goal => goal.targetAmount > 0);
     });
   }
 

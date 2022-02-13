@@ -1,40 +1,49 @@
-<h1 class="title">Today</h1>
+<ng-container *ngIf="goalsConfigured">
+  <div class="today-section-container">
+    <h1 class="title">Today</h1>
 
-<div *ngFor="let goal of userGoals" class="box">
-  <h2 class="title is-4 mb-2">{{goal.nutritionType}}</h2>
-  <h3 *ngIf="neededAmountReached(goal)" class="subtitle is-6 mt-0 mb-2 has-text-success">You've met your goal for the day!</h3>
-  <h3 *ngIf="allowedAmountExceeded(goal)" class="subtitle is-6 mt-0 mb-2 has-text-info">You've gone over the allowed amount</h3>
-  <div class="field">
-    <div class="level is-mobile mb-1">
-      <div class="level-left">
-        <!-- <span class="subtitle is-6 mb-0">Target - {{goal.targetAmount}}</span> -->
-        <label class="label">{{goal.amountSetting === AmountSetting.MaxAllowed ? 'Allowed' : 'Needed'}} - {{goal.targetAmount}}</label>
+    <div *ngFor="let goal of userGoals" class="box">
+      <h2 class="title is-4 mb-2">{{goal.nutritionType}}</h2>
+      <h3 *ngIf="neededAmountReached(goal)" class="subtitle is-6 mt-0 mb-2 has-text-success">You've met your goal for the day!</h3>
+      <h3 *ngIf="allowedAmountExceeded(goal)" class="subtitle is-6 mt-0 mb-2 has-text-info">You've gone over the allowed amount</h3>
+      <div class="field">
+        <div class="level is-mobile mb-1">
+          <div class="level-left">
+            <!-- <span class="subtitle is-6 mb-0">Target - {{goal.targetAmount}}</span> -->
+            <label class="label">{{goal.amountSetting === AmountSetting.MaxAllowed ? 'Allowed' : 'Needed'}} - {{goal.targetAmount}}</label>
+          </div>
+          <div class="level-right">
+            <label class="label">Current - {{getRecordForToday(goal).currentAmount}}</label>
+          </div>
+        </div>
+        <div class="control">
+          <input #newAmount class="input" type="number">
+        </div>
       </div>
-      <div class="level-right">
-        <label class="label">Current - {{getRecordForToday(goal).currentAmount}}</label>
+      <div class="field is-grouped is-grouped-right">
+        <div class="control">
+          <button class="button is-link" (click)="modifyCurrentAmount(goal, newAmount, Operation.Add)" [disabled]="updateStatus === UpdateStatus.LOADING" [ngClass]="{'is-loading' : updateStatus === UpdateStatus.LOADING}">Add</button>
+        </div>
+        <div class="control">
+          <button class="button is-link is-light" (click)="modifyCurrentAmount(goal, newAmount, Operation.Update)" [disabled]="updateStatus === UpdateStatus.LOADING" [ngClass]="{'is-loading' : updateStatus === UpdateStatus.LOADING}">Update</button>
+        </div>
       </div>
     </div>
-    <div class="control">
-      <input #newAmount class="input" type="number">
+
+    <div *ngIf="updateStatus === UpdateStatus.SUCCESS" class="notification is-success">
+      <button class="delete" (click)="updateStatus = UpdateStatus.NONE"></button>
+      Saved!
+    </div>
+
+    <div *ngIf="updateStatus === UpdateStatus.ERROR" class="notification is-danger">
+      <button class="delete" (click)="updateStatus = UpdateStatus.NONE"></button>
+      An error occurred.
     </div>
   </div>
-  <div class="field is-grouped is-grouped-right">
-    <div class="control">
-      <button class="button is-link" (click)="modifyCurrentAmount(goal, newAmount, Operation.Add)" [disabled]="updateStatus === UpdateStatus.LOADING" [ngClass]="{'is-loading' : updateStatus === UpdateStatus.LOADING}">Add</button>
-    </div>
-    <div class="control">
-      <button class="button is-link is-light" (click)="modifyCurrentAmount(goal, newAmount, Operation.Update)" [disabled]="updateStatus === UpdateStatus.LOADING" [ngClass]="{'is-loading' : updateStatus === UpdateStatus.LOADING}">Update</button>
-    </div>
-  </div>
-</div>
+</ng-container>
 
-<div *ngIf="updateStatus === UpdateStatus.SUCCESS" class="notification is-success">
-  <button class="delete" (click)="updateStatus = UpdateStatus.NONE"></button>
-  Saved!
-</div>
+<ng-container *ngIf="!goalsConfigured">
+  <a class="button is-large is-fullwidth is-link" routerLink="/goals">Set your goals to get started</a>
+</ng-container>
 
-<div *ngIf="updateStatus === UpdateStatus.ERROR" class="notification is-danger">
-  <button class="delete" (click)="updateStatus = UpdateStatus.NONE"></button>
-  An error occurred.
-</div>
 

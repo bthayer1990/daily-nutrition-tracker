@@ -10,12 +10,14 @@ import { GoalConfigurationComponent } from './goal-configuration/goal-configurat
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirePerformanceModule, PerformanceMonitoringService } from '@angular/fire/compat/performance';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    GoalConfigurationComponent
+    GoalConfigurationComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
 import firebase from 'firebase/compat/app';
 import { take } from 'rxjs';
 import { Goal, AmountSetting } from '../shared/goal.model';
@@ -18,19 +19,17 @@ export class GoalConfigurationComponent implements OnInit {
   UpdateStatus = UpdateStatus;
   AmountSetting = AmountSetting;
 
-  constructor(public auth: AngularFireAuth, private goalsSvc: GoalsService) { }
+  constructor(public auth: AngularFireAuth, private goalsSvc: GoalsService, private router: Router) { }
 
   async ngOnInit(): Promise<void> {
     this.auth.user.pipe(
       take(1)
     ).subscribe(async (authUser: firebase.User | null) => {
-      this.user = authUser;
-
-      if (!this.user) {
-        const userCred = await this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-        this.user = userCred.user;
+      if (!authUser) {
+        this.router.navigateByUrl(`/login`);
       }
 
+      this.user = authUser;
       this.setUserGoals();
     });
   }

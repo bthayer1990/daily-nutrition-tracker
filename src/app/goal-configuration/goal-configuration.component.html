@@ -11,7 +11,7 @@
 
 <div class="field">
   <div class="control">
-    <button class="button is-link" (click)="updateGoals()" [disabled]="updateStatus === UpdateStatus.LOADING">Submit</button>
+    <button class="button is-link" (click)="updateGoals()" [disabled]="updateStatus === UpdateStatus.LOADING" [ngClass]="{'is-loading' : updateStatus === UpdateStatus.LOADING}">Submit</button>
   </div>
 </div>
 

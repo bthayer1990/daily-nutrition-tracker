@@ -36,9 +36,11 @@ export class DailyRecord {
 export class HistoricalRecord {
   id: string = "";
   goal: Goal = new Goal("", "", NutritionType.Calories, AmountSetting.MaxAllowed);
+  goalMet: boolean = false;
 
-  constructor(id: string, goal: Goal) {
+  constructor(id: string, goal: Goal, goalMet: boolean) {
     this.id = id;
     this.goal = goal;
+    this.goalMet = goalMet;
   }
 }

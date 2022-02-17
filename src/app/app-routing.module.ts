@@ -4,6 +4,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { GoalConfigurationComponent } from './goal-configuration/goal-configuration.component';
 import { LoginComponent } from './login/login.component';
 import { canActivate, redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/compat/auth-guard';
+import { GoalHistoryComponent } from './goal-history/goal-history.component';
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 const redirectLoggedInToDashboard = () => redirectLoggedInTo(['dashboard']);
@@ -12,7 +13,8 @@ const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent, ...canActivate(redirectLoggedInToDashboard) },
   { path: 'dashboard', component: DashboardComponent, ...canActivate(redirectUnauthorizedToLogin) },
-  { path: 'goals', component: GoalConfigurationComponent, ...canActivate(redirectUnauthorizedToLogin) }
+  { path: 'goals', component: GoalConfigurationComponent, ...canActivate(redirectUnauthorizedToLogin) },
+  { path: 'history', component: GoalHistoryComponent, ...canActivate(redirectUnauthorizedToLogin) }
 ];
 
 @NgModule({

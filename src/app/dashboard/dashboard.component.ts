@@ -75,10 +75,10 @@ export class DashboardComponent implements OnInit {
   }
 
   neededAmountReached(goal: Goal): boolean {
-    return (goal.amountSetting === AmountSetting.MinNeeded) && (goal.dailyRecord.currentAmount >= goal.targetAmount);
+    return this.goalsSvc.neededAmountReached(goal);
   }
 
   allowedAmountExceeded(goal: Goal): boolean {
-    return (goal.amountSetting === AmountSetting.MaxAllowed) && (goal.dailyRecord.currentAmount >= goal.targetAmount);
+    return this.goalsSvc.allowedAmountExceeded(goal);
   }
 }

@@ -1,0 +1,26 @@
+<ng-container *ngIf="setupComplete">
+  <h1 class="title">History</h1>
+
+  <ng-container *ngIf="historicalRecordGroups.length > 0; else noHistory">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Results</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let group of historicalRecordGroups">
+          <td>{{group.displayDate}}</td>
+          <td>
+            <span [innerHTML]="group.getResultsSummary()"></span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <ng-template #noHistory>
+    <p class="title is-4 has-text-info">There are no historical records yet. Check back after you complete your first day of tracking.</p>
+  </ng-template>
+</ng-container>

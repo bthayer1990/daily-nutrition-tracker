@@ -19,7 +19,7 @@ export class GoalsService {
     return this.store.collection<Goal>(this.GOALS_COLLECTION_NAME, queryFn).valueChanges().pipe(
       take(1),
       switchMap(async (goals: Goal[]) => {
-        if (goals && goals.length) {
+        if (goals && goals.length > 0) {
           return goals;
         } else {
           return await this.makeDefaultGoals(user);
@@ -38,6 +38,14 @@ export class GoalsService {
     return [calorieGoal, proteinGoal];
   }
 
+  getUserHistoricalRecords(user: firebase.User): Observable<HistoricalRecord[]> {
+    const queryFn: QueryFn<DocumentData> = ref => ref.where('goal.userEmail', '==', user.email);
+
+    return this.store.collection<HistoricalRecord>(this.HISTORICAL_RECORDS_COLLECTION_NAME, queryFn).valueChanges().pipe(
+      take(1)
+    );
+  }
+
   updateGoalTarget(goal: Goal): Promise<void> {
     return this.store.collection(this.GOALS_COLLECTION_NAME).doc(goal.id).set({ targetAmount: goal.targetAmount}, { merge: true });
   }
@@ -48,8 +56,20 @@ export class GoalsService {
 
   async addHistoricalRecordForPreviousDay(goal: Goal): Promise<void> {
     if (goal.dailyRecord.date) {
-      const historicalRecord = new HistoricalRecord(this.store.createId(), goal);
+      const historicalRecord = new HistoricalRecord(this.store.createId(), goal, this.goalMet(goal));
       await this.store.collection<Goal>(this.HISTORICAL_RECORDS_COLLECTION_NAME).doc(historicalRecord.id).set(JSON.parse(JSON.stringify(historicalRecord)));
     }
+  }
+
+  private goalMet(goal: Goal): boolean {
+    return this.neededAmountReached(goal) || !this.allowedAmountExceeded(goal);
+  }
+
+  neededAmountReached(goal: Goal): boolean {
+    return (goal.amountSetting === AmountSetting.MinNeeded) && (goal.dailyRecord.currentAmount >= goal.targetAmount);
+  }
+
+  allowedAmountExceeded(goal: Goal): boolean {
+    return (goal.amountSetting === AmountSetting.MaxAllowed) && (goal.dailyRecord.currentAmount >= goal.targetAmount);
   }
 }

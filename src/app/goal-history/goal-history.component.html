@@ -1,8 +1,8 @@
 <ng-container *ngIf="setupComplete">
   <h1 class="title is-spaced">History</h1>
-  <h2 class="subtitle is-6">Showing past 30 days</h2>
 
   <ng-container *ngIf="historicalRecordGroups.length > 0; else noHistory">
+    <h2 class="subtitle is-6">Showing past 30 days</h2>
     <table class="table is-bordered is-fullwidth">
       <thead class="has-background-dark">
         <tr>

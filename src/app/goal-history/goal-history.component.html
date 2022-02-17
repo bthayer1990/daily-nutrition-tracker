@@ -1,19 +1,20 @@
 <ng-container *ngIf="setupComplete">
-  <h1 class="title">History</h1>
+  <h1 class="title is-spaced">History</h1>
+  <h2 class="subtitle is-6">Showing past 30 days</h2>
 
   <ng-container *ngIf="historicalRecordGroups.length > 0; else noHistory">
-    <table class="table is-fullwidth">
-      <thead>
+    <table class="table is-bordered is-fullwidth">
+      <thead class="has-background-dark">
         <tr>
-          <th>Date</th>
-          <th>Results</th>
+          <th class="has-text-white">Date</th>
+          <th class="has-text-white">Results</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let group of historicalRecordGroups">
-          <td>{{group.displayDate}}</td>
+          <th>{{group.displayDate}}</th>
           <td>
-            <span [innerHTML]="group.getResultsSummary()"></span>
+            <span class="content" [innerHTML]="group.getResultsSummary()"></span>
           </td>
         </tr>
       </tbody>

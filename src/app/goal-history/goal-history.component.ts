@@ -32,6 +32,7 @@ export class GoalHistoryComponent implements OnInit {
       if (records && records.length > 0) {
         this.groupRecords(records);
         this.sortGroups();
+        this.historicalRecordGroups = this.historicalRecordGroups.slice(0, 30);
       }
       this.setupComplete = true;
     });

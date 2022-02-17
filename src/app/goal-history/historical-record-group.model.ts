@@ -14,9 +14,14 @@ export class HistoricalRecordGroup {
   getResultsSummary(): string {
     let summary: string = "";
 
+    summary += "<ul class=\"mt-0\">";
+
     for (const record of this.recordsForDay) {
-      summary += `Nutrition Type: ${record.goal.nutritionType} Target: ${record.goal.targetAmount} Actual: ${record.goal.dailyRecord.currentAmount} Met: ${record.goalMet ? 'Yes': 'No'}<br>`;
+      const textClass = record.goalMet ? 'has-text-success' : '';
+      summary += `<li class=\"${textClass}\"><strong class=\"${textClass}\">${record.goal.nutritionType}: ${record.goal.dailyRecord.currentAmount}</strong></li>`;
     }
+
+    summary += "</ul>";
 
     return summary;
   }

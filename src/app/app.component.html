@@ -7,7 +7,7 @@
       <a class="navbar-item" routerLink="/dashboard">
         Daily Nutrition Tracker
       </a>
-      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenuContainer" (click)="mobileMenuActive = !mobileMenuActive" [ngClass]="{'is-active' : mobileMenuActive}">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenuContainer" (click)="toggleMobileMenu($event)" [ngClass]="{'is-active' : mobileMenuActive}">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -19,7 +19,7 @@
           Goals
         </a>
       </div>
-      <div class="navbar-end">
+      <div class="navbar-end" (click)="$event.stopPropagation()">
         <div class="navbar-item">
           <div class="buttons">
             <a class="button is-light" href="" (click)="logout()">

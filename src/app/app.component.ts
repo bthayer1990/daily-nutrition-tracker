@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 @Component({
@@ -13,5 +13,14 @@ export class AppComponent {
 
   logout() {
     this.auth.signOut();
+  }
+
+  @HostListener('document:click', ['$event']) onDocumentClick() {
+    this.mobileMenuActive = false;
+  }
+
+  toggleMobileMenu($event: any): void {
+    $event.stopPropagation(); // stops the HostListener event from being triggered
+    this.mobileMenuActive = !this.mobileMenuActive;
   }
 }

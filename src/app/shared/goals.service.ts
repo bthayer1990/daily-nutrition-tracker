@@ -62,14 +62,18 @@ export class GoalsService {
   }
 
   private goalMet(goal: Goal): boolean {
-    return this.neededAmountReached(goal) || !this.allowedAmountExceeded(goal);
+    return this.neededAmountReached(goal) || this.allowedAmountNotExceeded(goal);
   }
 
   neededAmountReached(goal: Goal): boolean {
     return (goal.amountSetting === AmountSetting.MinNeeded) && (goal.dailyRecord.currentAmount >= goal.targetAmount);
   }
 
+  allowedAmountNotExceeded(goal: Goal): boolean {
+    return (goal.amountSetting === AmountSetting.MaxAllowed) && (goal.dailyRecord.currentAmount <= goal.targetAmount);
+  }
+
   allowedAmountExceeded(goal: Goal): boolean {
-    return (goal.amountSetting === AmountSetting.MaxAllowed) && (goal.dailyRecord.currentAmount >= goal.targetAmount);
+    return (goal.amountSetting === AmountSetting.MaxAllowed) && (goal.dailyRecord.currentAmount > goal.targetAmount);
   }
 }

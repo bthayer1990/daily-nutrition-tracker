@@ -48,6 +48,7 @@ export class DashboardComponent implements OnInit {
       if (!dailyRecordIsForToday) {
         await this.goalsSvc.addHistoricalRecordForPreviousDay(goal);
         goal.dailyRecord = new DailyRecord(this.dateSvc.getFormattedCurrentDate());
+        await this.goalsSvc.updateGoalDailyRecord(goal);
       }
     }
   }

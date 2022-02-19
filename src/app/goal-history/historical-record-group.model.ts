@@ -18,7 +18,7 @@ export class HistoricalRecordGroup {
 
     for (const record of this.recordsForDay) {
       const textClass = record.goalMet ? 'has-text-success' : '';
-      summary += `<li class=\"${textClass}\"><strong class=\"${textClass}\">${record.goal.nutritionType}: ${record.goal.dailyRecord.currentAmount}</strong></li>`;
+      summary += `<li class=\"${textClass}\"><strong class=\"${textClass}\">${record.goal.nutritionType}: ${record.goal.dailyRecord.currentAmount}</strong> <span class=\"is-size-7\">Goal: ${record.goal.targetAmount}</span></li>`;
     }
 
     summary += "</ul>";

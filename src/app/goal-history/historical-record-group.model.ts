@@ -14,7 +14,7 @@ export class HistoricalRecordGroup {
   getResultsSummary(): string {
     let summary: string = "";
 
-    summary += "<ul class=\"mt-0\">";
+    summary += "<ul class=\"mt-0 ml-4\">";
 
     for (const record of this.recordsForDay) {
       const textClass = record.goalMet ? 'has-text-success' : '';
